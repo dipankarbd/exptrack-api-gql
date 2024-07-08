@@ -1,0 +1,152 @@
+enum UserRole {
+  Admin
+  Basic
+}
+
+enum AccountSate {
+  Active
+  Inactive
+  Closed
+}
+
+enum AccountType {
+  Bank
+  Cash
+  CreditCard
+}
+
+enum IncomeSource {
+  Salary
+  Interest
+  Profit
+  Other
+}
+
+type User {
+  id: Int!
+  role: UserRole!
+  firstName: String!
+  lastName: String!
+  email: String!
+  createdAt: String!
+}
+
+type Account {
+  id: Int!
+  type: AccountType!
+  state: AccountSate!
+  name: String!
+  initialAmount: Float!
+  currentBalance: Float!
+  createdAt: String!
+  user: User!
+}
+
+type ExpenseCategory {
+  id: Int!
+  name: String!
+  parent: ExpenseCategory
+}
+
+type Expense {
+  id: Int!
+  amount: Float!
+  date: String!
+  category: ExpenseCategory!
+  account: Account!
+}
+
+type Income {
+  id: Int!
+  amount: Float!
+  date: String!
+  source: IncomeSource!
+  account: Account!
+}
+
+type Transfer {
+  id: Int!
+  amount: Float!
+  date: String!
+  fromAccount: Account!
+  toAccount: Account!
+}
+
+type Transaction {
+  id: Int!
+  debit: Float!
+  credit: Float!
+  balance: Float!
+  description: String!
+  date: String!
+  account: Account!
+}
+
+input AddAccountInput {
+  name: String!
+  type: AccountType!
+  initialAmount: Float!
+}
+
+input UpdateAccountInput {
+  id: Int!
+  name: String!
+  type: AccountType!
+  state: AccountSate!
+  initialAmount: Float!
+}
+
+input AddIncomeInput {
+  amount: Float!
+  date: String!
+  source: IncomeSource!
+  accountId: Int! 
+}
+
+input AddExpenseInput {
+  amount: Float!
+  date: String!
+  categoryId: Int!
+  accountId: Int!
+}
+
+input UpdateExpenseInput {
+  id: Int!
+  amount: Float!
+  date: String!
+  categoryId: Int!
+  accountId: Int!
+}
+
+input AddTransferInput {
+  amount: Float!
+  date: String!
+  fromAccountId: Int!
+  toAccountId: Int!
+}
+
+type Query {
+  accounts: [Account!]!
+  account(id: Int!): Account
+  incomes: [Income!]!
+  income(id: Int!): Income
+  expenseCategories: [ExpenseCategory!]!
+  expenseCategory(id: Int!): ExpenseCategory
+  expenses: [Expense!]!
+  expense(id: Int!): Expense
+  transfers: [Transfer!]!
+  transfer(id: Int!): Transfer
+  transactions: [Transaction!]!
+}
+
+type Mutation {
+  addAccount(input: AddAccountInput!): Account!
+  updateAccount(input: UpdateAccountInput!): Account!
+  addIncome(input: AddIncomeInput!): Income!
+  deleteIncome(id: Int!): Boolean
+  addExpense(input: AddExpenseInput!): Expense!
+  updateExpense(input: UpdateExpenseInput!): Expense!
+  deleteExpense(id: Int!): Boolean
+  addTransfer(input: AddTransferInput!): Transfer!
+  deleteTransfer(id: Int!): Boolean
+}
